@@ -10,7 +10,7 @@ const Items = () => {
 
   const fetchItems = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/item'); // adjust if route is different
+      const res = await axios.get('https://caesars-fruit-backend.vercel.app/api/item'); // adjust if route is different
       setItems(res.data);
     } catch (err) {
       console.error('Failed to fetch items', err);
