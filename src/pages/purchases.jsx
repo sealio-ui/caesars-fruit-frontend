@@ -6,7 +6,7 @@ const Purchases = () => {
   const [purchases, setPurchases] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/purchase')
+    axios.get('https://caesars-fruit-backend.vercel.app/api/purchase')
       .then(res => setPurchases(res.data))
       .catch(err => console.error('Failed to load purchases:', err));
   }, []);
