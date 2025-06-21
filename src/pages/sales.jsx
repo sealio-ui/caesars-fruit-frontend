@@ -10,7 +10,7 @@ const Sales = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/sales', { itemName, quantity });
+      await axios.post('https://caesars-fruit-backend.vercel.app/api/sales', { itemName, quantity });
       setMessage('Sale recorded ✅');
       setItemName('');
       setQuantity(1);
