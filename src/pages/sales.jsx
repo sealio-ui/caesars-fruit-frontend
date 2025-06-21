@@ -23,7 +23,7 @@ const Sales = () => {
 
   const fetchSales = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/sales');
+      const res = await axios.get('https://caesars-fruit-backend.vercel.app/api/sales');
       setSales(res.data);
     } catch (err) {
       console.error('Error fetching sales:', err);
