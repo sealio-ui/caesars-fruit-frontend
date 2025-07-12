@@ -3,8 +3,6 @@ import axios from 'axios';
 
 const Sales = ({ isAdmin }) => {
   const [sales, setSales] = useState([]);
-  const [itemName, setItemName] = useState('');
-  const [quantity, setQuantity] = useState(1);
   const [message, setMessage] = useState('');
 
   const fetchSales = async () => {
@@ -16,20 +14,28 @@ const Sales = ({ isAdmin }) => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const addSale = async (itemName, quantity) => {
     try {
-      await axios.post('https://caesars-fruit-backend.vercel.app/api/sales', {
-        itemName,
-        quantity,
-      });
-      setMessage('Sale recorded ✅');
-      setItemName('');
-      setQuantity(1);
+      await axios.post('https://caesars-fruit-backend.vercel.app/api/sales', { itemName, quantity });
+      setMessage(`✅ Sale added: ${quantity}x ${itemName}`);
       fetchSales();
     } catch (err) {
       console.error(err);
-      setMessage(err.response?.data?.error || 'Sale failed ❌');
+      setMessage(err.response?.data?.error || '❌ Sale failed');
+    }
+  };
+
+  const clearSales = async () => {
+    const confirmed = window.confirm('Are you sure you want to clear all sales history?');
+    if (!confirmed) return;
+
+    try {
+      await axios.delete('https://caesars-fruit-backend.vercel.app/api/sales');
+      setMessage('🧹 Sales history cleared');
+      fetchSales();
+    } catch (err) {
+      console.error(err);
+      setMessage('❌ Failed to clear sales');
     }
   };
 
@@ -42,26 +48,28 @@ const Sales = ({ isAdmin }) => {
       <h1 className="text-2xl font-bold mb-4">Sales</h1>
 
       {isAdmin && (
-        <form onSubmit={handleSubmit} className="mb-6 space-y-2">
-          <input
-            type="text"
-            placeholder="Item name"
-            className="border p-2 w-full"
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
-          />
-          <input
-            type="number"
-            min="1"
-            className="border p-2 w-full"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-          />
-          <button className="bg-green-500 text-white px-4 py-2 rounded" type="submit">
-            Submit Sale
+        <div className="mb-6 space-y-4">
+          <div className="flex flex-wrap gap-2">
+            {['Apel', 'Jeruk', 'Pisang', 'Cornucopia'].map((item) => (
+              <button
+                key={item}
+                onClick={() => addSale(item, 1)}
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+              >
+                +1 {item}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={clearSales}
+            className="bg-red-500 text-white px-4 py-2 rounded mt-2 hover:bg-red-600"
+          >
+            🧹 Clear Sales History
           </button>
-          {message && <p className="text-sm text-blue-600">{message}</p>}
-        </form>
+
+          {message && <p className="text-blue-600 text-sm mt-2">{message}</p>}
+        </div>
       )}
 
       <h2 className="text-lg font-semibold mb-2">Recent Sales</h2>
@@ -75,7 +83,6 @@ const Sales = ({ isAdmin }) => {
                 currency: 'IDR',
               }).format(sale.totalPrice)}
             </div>
-
             {sale.components?.length > 0 && (
               <ul className="list-disc list-inside ml-4 text-sm text-gray-700 mt-1">
                 {sale.components.map((c, index) => (
