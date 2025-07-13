@@ -1,22 +1,120 @@
-// src/pages/Purchases.jsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const Purchases = () => {
+const Purchases = ({ isAdmin }) => {
   const [purchases, setPurchases] = useState([]);
+  const [items, setItems] = useState([]);
+  const [form, setForm] = useState({
+    itemId: '',
+    quantity: 1,
+    supplier: '',
+    description: ''
+  });
+  const [message, setMessage] = useState('');
+
+  const fetchPurchases = async () => {
+    try {
+      const res = await axios.get('https://caesars-fruit-backend.vercel.app/api/purchase');
+      setPurchases(res.data);
+    } catch (err) {
+      console.error('Failed to load purchases:', err);
+    }
+  };
+
+  const fetchItems = async () => {
+    try {
+      const res = await axios.get('https://caesars-fruit-backend.vercel.app/api/item');
+      setItems(res.data);
+    } catch (err) {
+      console.error('Failed to load items:', err);
+    }
+  };
 
   useEffect(() => {
-    axios.get('https://caesars-fruit-backend.vercel.app/api/purchase')
-      .then(res => setPurchases(res.data))
-      .catch(err => console.error('Failed to load purchases:', err));
+    fetchPurchases();
+    if (isAdmin) fetchItems();
   }, []);
+
+  const handleInputChange = (field, value) => {
+    setForm({ ...form, [field]: value });
+  };
+
+  const submitPurchase = async () => {
+    try {
+      await axios.post('https://caesars-fruit-backend.vercel.app/api/purchase', form);
+      setMessage('✅ Purchase added');
+      setForm({ itemId: '', quantity: 1, supplier: '', description: '' });
+      fetchPurchases();
+    } catch (err) {
+      console.error(err);
+      setMessage(err.response?.data?.error || '❌ Failed to add purchase');
+    }
+  };
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Purchases</h1>
+
+      {isAdmin && (
+        <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+          <h2 className="font-semibold text-lg mb-2">➕ Add Purchase</h2>
+          <div className="flex flex-col gap-2">
+            <select
+              value={form.itemId}
+              onChange={(e) => handleInputChange('itemId', e.target.value)}
+              className="border p-2 rounded"
+            >
+              <option value="">Select Item</option>
+              {items.map((item) => (
+                <option key={item._id} value={item._id}>
+                  {item.name} ({item.type}) - {new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                  }).format(item.price)}
+                </option>
+              ))}
+            </select>
+
+            <input
+              type="number"
+              min="1"
+              value={form.quantity}
+              onChange={(e) => handleInputChange('quantity', e.target.value)}
+              className="border p-2 rounded"
+              placeholder="Quantity"
+            />
+
+            <input
+              type="text"
+              value={form.supplier}
+              onChange={(e) => handleInputChange('supplier', e.target.value)}
+              className="border p-2 rounded"
+              placeholder="Supplier (optional)"
+            />
+
+            <input
+              type="text"
+              value={form.description}
+              onChange={(e) => handleInputChange('description', e.target.value)}
+              className="border p-2 rounded"
+              placeholder="Description (optional)"
+            />
+
+            <button
+              onClick={submitPurchase}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              ✅ Submit Purchase
+            </button>
+
+            {message && <p className="text-sm text-blue-600 mt-2">{message}</p>}
+          </div>
+        </div>
+      )}
+
       <div className="grid gap-4">
-        {purchases.map(purchase => (
-          <div key={purchase._id} className="border p-4 rounded-xl shadow-sm">
+        {purchases.map((purchase) => (
+          <div key={purchase._id} className="border p-4 rounded-xl shadow-sm bg-white">
             <div><strong>Item:</strong> {purchase.item?.name || 'Unknown'}</div>
             <div><strong>Qty:</strong> {purchase.quantity}</div>
             <div><strong>Unit Price:</strong> {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(purchase.unitPrice)}</div>
