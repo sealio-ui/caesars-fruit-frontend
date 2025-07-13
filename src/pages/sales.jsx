@@ -44,7 +44,7 @@ const Sales = ({ isAdmin }) => {
     if (!confirm) return;
 
     try {
-      await axios.delete('https://caesars-fruit-backend.vercel.app/api/sales');
+      await axios.delete('https://caesars-fruit-backend.vercel.app/api/sales/all');
       setMessage('🧹 Sales history cleared');
       fetchSales();
     } catch (err) {
