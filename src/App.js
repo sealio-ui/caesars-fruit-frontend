@@ -11,6 +11,11 @@ function App() {
   const [spent, setSpent] = useState(0);
   const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem('isAdmin') === 'true');
 
+  function App() {
+  const [income, setIncome] = useState(0);
+  const [spent, setSpent] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem('isAdmin') === 'true');
+
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
@@ -38,6 +43,7 @@ function App() {
 
     fetchMetrics();
   }, []);
+
 
   const handleLogout = () => {
     setIsAdmin(false);
