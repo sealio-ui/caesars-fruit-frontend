@@ -40,18 +40,19 @@ const Sales = ({ isAdmin }) => {
   };
 
   const clearSales = async () => {
-    const confirm = window.confirm('Are you sure you want to clear all sales history?');
-    if (!confirm) return;
+  const confirmDelete = window.confirm('Are you sure you want to clear all sales history?');
+  if (!confirmDelete) return;
 
-    try {
-      await axios.delete('https://caesars-fruit-backend.vercel.app/api/sales/all');
-      setMessage('🧹 Sales history cleared');
-      fetchSales();
-    } catch (err) {
-      console.error(err);
-      setMessage('❌ Failed to clear sales');
-    }
-  };
+  try {
+    await axios.delete('https://caesars-fruit-backend.vercel.app/api/sales/all');
+    setMessage('🧹 Sales history cleared');
+    fetchSales();
+  } catch (err) {
+    console.error(err);
+    setMessage('❌ Failed to clear sales');
+  }
+};
+
 
   useEffect(() => {
     fetchSales();
