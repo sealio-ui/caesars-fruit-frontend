@@ -115,18 +115,14 @@ const Sales = ({ isAdmin }) => {
               }).format(sale.totalPrice)}
             </div>
             {sale.components?.length > 0 && (
-              <ul className="list-disc list-inside ml-4 text-sm text-gray-700 mt-1">
-                {sale.components.map((c, index) => (
-                  <li key={index}>{c.quantity}x {c.name}</li>
-                ))}
-              </ul>
-            )}
-            {sale.items?.length > 0 && (
-              <ul className="list-disc list-inside ml-4 text-sm text-gray-700 mt-1">
-                {sale.items.map((i, index) => (
-                  <li key={index}>{i.quantity}x {i.item?.name || i.name}</li>
-                ))}
-              </ul>
+              <div className="mt-2 text-sm text-gray-700">
+                <span className="font-semibold">Items:</span>
+                <ul className="list-disc list-inside ml-4">
+                  {sale.components.map((c, index) => (
+                    <li key={index}>{c.quantity}x {c.name}</li>
+                  ))}
+                </ul>
+              </div>
             )}
           </li>
         ))}
