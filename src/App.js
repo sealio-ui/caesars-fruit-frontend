@@ -26,8 +26,8 @@ function App() {
           .reduce((sum, s) => sum + (s.totalPrice || 0), 0);
 
         const todaySpent = purchasesRes.data
-          .filter((p) => p.date?.startsWith(today))
-          .reduce((sum, p) => sum + (p.totalPrice || 0), 0);
+        .filter(p => p.date && new Date(p.date).toISOString().startsWith(today))
+        .reduce((sum, p) => sum + (p.amount || 0), 0);
 
         setIncome(todayIncome);
         setSpent(todaySpent);
