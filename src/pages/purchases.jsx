@@ -43,13 +43,13 @@ const Purchases = ({ isAdmin }) => {
 
   const submitPurchase = async () => {
     try {
-      await axios.post('https://caesars-fruit-backend.vercel.app/api/purchase', {
-        item: form.itemId,
-        quantity: Number(form.quantity),
-        unitPrice: Number(form.unitPrice),
-        supplier: form.supplier,
-        description: form.description
-      });
+    await axios.post('https://caesars-fruit-backend.vercel.app/api/purchase', {
+      item: form.itemId,
+      quantity: Number(form.quantity),
+      unitPrice, // 💡 include unit price
+      supplier: form.supplier,
+      description: form.description
+    });
       setMessage('✅ Purchase added');
       setForm({
         itemId: '',
