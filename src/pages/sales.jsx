@@ -107,21 +107,21 @@ const Sales = ({ isAdmin }) => {
       <ul className="space-y-2">
         {sales.map((sale) => (
           <li key={sale._id} className="bg-white p-3 shadow rounded">
-            <div>
-              <strong>{sale.bundleName || 'Items Sold'}</strong> × {sale.quantity || '-'} →{' '}
-              {new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-              }).format(sale.totalPrice)}
-            </div>
-            {sale.components?.length > 0 && (
-              <ul className="list-disc list-inside ml-4 text-sm text-gray-700 mt-1">
-                {sale.components.map((c, index) => (
-                  <li key={index}>{c.quantity}x {c.name}</li>
-                ))}
-              </ul>
-            )}
-          </li>
+  <div>
+    <strong>{sale.bundleName || 'Items Sold'}</strong> × {sale.quantity ?? '-'} →{' '}
+    {new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(sale.totalPrice)}
+  </div>
+  {sale.components?.length > 0 && (
+    <ul className="list-disc list-inside ml-4 text-sm text-gray-700 mt-1">
+      {sale.components.map((c, index) => (
+        <li key={index}>{c.quantity}x {c.name}</li>
+      ))}
+    </ul>
+          )}
+      </li>
         ))}
       </ul>
     </div>
