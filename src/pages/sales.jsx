@@ -20,15 +20,15 @@ const Sales = ({ isAdmin }) => {
   };
 
   const handleItemChange = (index, field, value) => {
-    const updatedItems = [...newSaleItems];
-    updatedItems[index][field] = field === 'quantity' ? Number(value) : value;
-    setNewSaleItems(updatedItems);
+    const updated = [...newSaleItems];
+    updated[index][field] = field === 'quantity' ? Number(value) : value;
+    setNewSaleItems(updated);
   };
 
   const handleSubmitSale = async () => {
     try {
       await axios.post('https://caesars-fruit-backend.vercel.app/api/sales', {
-        items: newSaleItems
+        items: newSaleItems,
       });
       setMessage('✅ Sale submitted successfully');
       setNewSaleItems([{ itemName: '', quantity: 1 }]);
@@ -40,8 +40,8 @@ const Sales = ({ isAdmin }) => {
   };
 
   const clearSales = async () => {
-    const confirmed = window.confirm('Are you sure you want to clear all sales history?');
-    if (!confirmed) return;
+    const confirm = window.confirm('Are you sure you want to clear all sales history?');
+    if (!confirm) return;
 
     try {
       await axios.delete('https://caesars-fruit-backend.vercel.app/api/sales');
@@ -108,7 +108,8 @@ const Sales = ({ isAdmin }) => {
         {sales.map((sale) => (
           <li key={sale._id} className="bg-white p-3 shadow rounded">
             <div>
-              <strong>{sale.bundleName || 'Items Sold'}</strong> × {sale.quantity || '-'} →{' '}
+              <strong>{sale.bundleName || 'Items Sold'}</strong> ×{' '}
+              {sale.components?.find(c => c.name === 'Cornucopia')?.quantity ?? sale.components?.length ?? '-'} →{' '}
               {new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
