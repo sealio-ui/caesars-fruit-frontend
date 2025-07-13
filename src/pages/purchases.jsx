@@ -1,3 +1,4 @@
+// src/pages/Purchases.jsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -7,6 +8,7 @@ const Purchases = ({ isAdmin }) => {
   const [form, setForm] = useState({
     itemId: '',
     quantity: 1,
+    unitPrice: '',
     supplier: '',
     description: ''
   });
@@ -41,9 +43,21 @@ const Purchases = ({ isAdmin }) => {
 
   const submitPurchase = async () => {
     try {
-      await axios.post('https://caesars-fruit-backend.vercel.app/api/purchase', form);
+      await axios.post('https://caesars-fruit-backend.vercel.app/api/purchase', {
+        item: form.itemId,
+        quantity: Number(form.quantity),
+        unitPrice: Number(form.unitPrice),
+        supplier: form.supplier,
+        description: form.description
+      });
       setMessage('✅ Purchase added');
-      setForm({ itemId: '', quantity: 1, supplier: '', description: '' });
+      setForm({
+        itemId: '',
+        quantity: 1,
+        unitPrice: '',
+        supplier: '',
+        description: ''
+      });
       fetchPurchases();
     } catch (err) {
       console.error(err);
@@ -85,6 +99,15 @@ const Purchases = ({ isAdmin }) => {
             />
 
             <input
+              type="number"
+              min="0"
+              value={form.unitPrice}
+              onChange={(e) => handleInputChange('unitPrice', e.target.value)}
+              className="border p-2 rounded"
+              placeholder="Unit Price (per item)"
+            />
+
+            <input
               type="text"
               value={form.supplier}
               onChange={(e) => handleInputChange('supplier', e.target.value)}
@@ -117,8 +140,14 @@ const Purchases = ({ isAdmin }) => {
           <div key={purchase._id} className="border p-4 rounded-xl shadow-sm bg-white">
             <div><strong>Item:</strong> {purchase.item?.name || 'Unknown'}</div>
             <div><strong>Qty:</strong> {purchase.quantity}</div>
-            <div><strong>Unit Price:</strong> {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(purchase.unitPrice)}</div>
-            <div><strong>Total:</strong> {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(purchase.amount)}</div>
+            <div><strong>Unit Price:</strong> {new Intl.NumberFormat('id-ID', {
+              style: 'currency',
+              currency: 'IDR'
+            }).format(purchase.unitPrice)}</div>
+            <div><strong>Total:</strong> {new Intl.NumberFormat('id-ID', {
+              style: 'currency',
+              currency: 'IDR'
+            }).format(purchase.amount)}</div>
             <div><strong>Supplier:</strong> {purchase.supplier || '-'}</div>
             <div><strong>Description:</strong> {purchase.description || '-'}</div>
             <div><strong>Date:</strong> {new Date(purchase.date).toLocaleDateString('id-ID')}</div>
