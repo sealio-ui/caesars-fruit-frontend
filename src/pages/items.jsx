@@ -42,10 +42,10 @@ const Items = ({ isAdmin }) => {
     }
   };
 
-  const addPurchase = async (itemId, quantity) => {
+  const addPurchase = async (item, quantity) => {
     try {
       await axios.post('https://caesars-fruit-backend.vercel.app/api/purchase', {
-        itemId,
+        item,
         quantity
       });
       setMessage('✅ Stock increased');
