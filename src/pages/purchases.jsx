@@ -5,7 +5,7 @@ const Purchases = ({ isAdmin }) => {
   const [purchases, setPurchases] = useState([]);
   const [items, setItems] = useState([]);
   const [form, setForm] = useState({
-    itemId: '',
+    item: '',
     quantity: 1,
     unitPrice: '',
     supplier: '',
@@ -41,16 +41,16 @@ const Purchases = ({ isAdmin }) => {
   };
 
   const submitPurchase = async () => {
-    const { itemId, quantity, unitPrice, supplier, description } = form;
+    const { item, quantity, unitPrice, supplier, description } = form;
 
-    if (!itemId || !quantity || !unitPrice) {
+    if (!item || !quantity || !unitPrice) {
       setMessage('❌ Item, quantity, and unit price are required');
       return;
     }
 
     try {
       await axios.post('https://caesars-fruit-backend.vercel.app/api/purchase', {
-        item: itemId,
+        item: item,
         quantity: Number(quantity),
         unitPrice: Number(unitPrice),
         supplier,
@@ -58,7 +58,7 @@ const Purchases = ({ isAdmin }) => {
       });
 
       setMessage('✅ Purchase added');
-      setForm({ itemId: '', quantity: 1, unitPrice: '', supplier: '', description: '' });
+      setForm({ item: '', quantity: 1, unitPrice: '', supplier: '', description: '' });
       fetchPurchases();
     } catch (err) {
       console.error(err);
@@ -75,8 +75,8 @@ const Purchases = ({ isAdmin }) => {
           <h2 className="font-semibold text-lg mb-2">➕ Add Purchase</h2>
           <div className="flex flex-col gap-2">
             <select
-              value={form.itemId}
-              onChange={(e) => handleInputChange('itemId', e.target.value)}
+              value={form.item}
+              onChange={(e) => handleInputChange('item', e.target.value)}
               className="border p-2 rounded"
             >
               <option value="">Select Item</option>
