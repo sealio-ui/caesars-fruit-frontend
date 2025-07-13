@@ -14,6 +14,19 @@ const Sales = ({ isAdmin }) => {
     }
   };
 
+  const addSale = async (itemName, quantity = 1) => {
+    try {
+      await axios.post('https://caesars-fruit-backend.vercel.app/api/sales', {
+        items: [{ itemName, quantity }]
+      });
+      setMessage(`✅ Sale added: ${quantity}x ${itemName}`);
+      fetchSales();
+    } catch (err) {
+      console.error(err);
+      setMessage(err.response?.data?.error || '❌ Sale failed');
+    }
+  };
+
   const addMultipleSale = async () => {
     const itemsToBuy = [
       { itemName: 'Apel', quantity: 2 },
@@ -58,7 +71,7 @@ const Sales = ({ isAdmin }) => {
             {['Apel', 'Jeruk', 'Pisang', 'Cornucopia'].map((item) => (
               <button
                 key={item}
-                onClick={() => addMultipleSale([{ itemName: item, quantity: 1 }])}
+                onClick={() => addSale(item)}
                 className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
               >
                 +1 {item}
