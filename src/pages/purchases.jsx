@@ -50,7 +50,7 @@ const Purchases = ({ isAdmin }) => {
 
     try {
       await axios.post('https://caesars-fruit-backend.vercel.app/api/purchase', {
-        itemId: item,
+        item: item,
         quantity: Number(quantity),
         unitPrice: Number(unitPrice),
         supplier,
