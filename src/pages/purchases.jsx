@@ -43,7 +43,7 @@ const Purchases = ({ isAdmin }) => {
   const submitPurchase = async () => {
     const { item, quantity, unitPrice, supplier, description } = form;
 
-    if (!item || !quantity || !unitPrice) {
+    if (!item || quantity <= 0 || unitPrice <= 0) {
       setMessage('❌ Item, quantity, and unit price are required');
       return;
     }
