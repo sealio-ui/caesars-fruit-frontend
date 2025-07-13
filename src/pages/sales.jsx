@@ -44,9 +44,7 @@ const Sales = ({ isAdmin }) => {
     if (!confirmed) return;
 
     try {
-      await axios.delete('https://caesars-fruit-backend.vercel.app/api/sales', {
-        headers: { 'Content-Type': 'application/json' }
-      });
+      await axios.delete('https://caesars-fruit-backend.vercel.app/api/sales');
       setMessage('🧹 Sales history cleared');
       fetchSales();
     } catch (err) {
@@ -110,14 +108,11 @@ const Sales = ({ isAdmin }) => {
         {sales.map((sale) => (
           <li key={sale._id} className="bg-white p-3 shadow rounded">
             <div>
-              <strong>{sale.bundleName || 'Items Sold'}</strong> × {sale.quantity || sale.components?.length || '-'} →{' '}
+              <strong>{sale.bundleName || 'Items Sold'}</strong> × {sale.quantity || '-'} →{' '}
               {new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
               }).format(sale.totalPrice)}
-              <div className="text-xs text-gray-500 mt-1">
-                {sale.createdAt ? new Date(sale.createdAt).toLocaleString('id-ID') : ''}
-              </div>
             </div>
             {sale.components?.length > 0 && (
               <ul className="list-disc list-inside ml-4 text-sm text-gray-700 mt-1">
